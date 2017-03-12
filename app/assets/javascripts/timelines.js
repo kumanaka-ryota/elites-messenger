@@ -8,10 +8,21 @@ $(function(){
   });
 
   $('form.input_message_form').on('ajax:complete', function(event, data, status){
+    var json,
+        errors;    
     // Ajaxレスポンス
-    if ( status == 'success') {
+    if(status == 'success') {    
       var json = JSON.parse(data.responseText);
-      $('div.timeline').prepend(json.timeline);
+      if(json.timeline) {
+        $('div.timeline').prepend(json.timeline);  
+        $('div.alert').html('')
+        $('#timeline_message').val('');
+      } else if (json.errors) {
+        $('div.alert').html('')
+        json.errors.forEach(function(error) {
+          $('<p>', {class: 'alert', text: error}).appendTo('div.alert');
+        });
+      }
     }
   });
 });

@@ -14,7 +14,6 @@
   </p>
   <%= simple_format t.message, class: 'message' %>
   <% if mypost?(t) %>
-    
     <div class="operation">
     <!-- 自分の投稿の場合、編集ボタンを表示 -->
     <%= link_to root_path(id: t.id, message: t.message) do %>
@@ -22,12 +21,18 @@
     <% end %>
     <%= button_to 'Del', timeline_path(t), method: :delete, class: 'btn btn-danger', data: {confirm: '削除してよろしいですか？'}  %>
     </div>
-    
   <% else %>
     <!-- 他人の投稿の場合、Reボタンを表示 -->
     <%= link_to root_path(reply_id: t.id) do %>
       <%= button_tag 'Re', class: 'btn btn-info' %>
     <% end %>
+    <!-- 基本課題16 ADD START-->
+    <hr>
+    <%= button_to 'Like!' , timeline_likes_path(timeline_id: t.id) , method: :post , class: 'btn btn-info', form_class: 'like_button' if t.likes.where(user_id: current_user.id).count == 0 %>
+    <% if t.likes.count > 0 %>
+      いいね！<%= t.likes.count %>件
+    <% end %>
+    <!-- 基本課題16 ADD END-->
   <% end %>
 </div>
 <% t.replies.each do |r| %>
