@@ -2,28 +2,26 @@
 
   <!-- メッセージ入力 -->
   <div class="input">
-    <%= form_for @input_message, remote: true, html: {class: 'input_message_form'}, format: :json, authenticity_token: true do |f| %>
+      <%= form_for @input_message, remote: true, html: {class: 'input_message_form'}, format: :json, authenticity_token: true do |f| %>
       <div class="form-group">
         <%= f.label :message %><br/>
         <!--** 編集中の場合は場合はメッセージを表示 **-->
         <% if @input_message.persisted? %>
           編集中
-
         <% elsif @reply_timeline %>
           <%= @reply_timeline.user.name %>の「<%= truncate(@reply_timeline.message, length: 7) %>」に返信
         <% end %>
-
         <br/>
         <%= f.text_area :message, class: 'form-control', rows: 3 %>
       </div>
       <div class="actions clearfix">
-        <% if flash[:alert] %>
-          <div class="alert">
+        <div class="alert">
+          <% if flash[:alert] %>
             <% flash[:alert].each do |message| %>
               <p class="alert"><%= message %></p>
             <% end %>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
         <div class="post">
           <!--** 編集中は編集をキャンセルするボタンを表示 **-->
           <% if @input_message.persisted? || @reply_timeline %>
@@ -31,14 +29,13 @@
               <%= button_tag 'Cancel', class: 'btn btn-default' %>
             <% end %>
           <% end %>
-           <%= f.submit 'Post', class: 'btn btn-primary post' %>
-           <%= f.submit 'AjaxPost', class: 'btn btn-primary ajaxpost' %>
+          <%= f.submit 'Post', class: 'btn btn-primary post' %>
+          <%= f.submit 'AjaxPost', class: 'btn btn-primary ajaxpost' %>
         </div>
       </div>
       <%= f.hidden_field :reply_id, value: @reply_timeline.id if @reply_timeline %>
     <% end %>
   </div>
-  
   <div class="user_filter">
     <%= form_tag filter_by_user_timelines_path do |f| %>
       <div class="form-group">
@@ -51,7 +48,6 @@
     <% end %>
   </div>
   
-  <!-- タイムライン -->
   <div class="timeline">
     <% @timeline.each do |t| %>
       <%= render 'timelines/timeline', t: t %>
